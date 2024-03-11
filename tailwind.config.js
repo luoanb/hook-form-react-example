@@ -7,7 +7,7 @@ export default {
     // ...
     './index.html',
     './src/**/*.{js,ts,jsx,tsx}',
-    '../node_modules/@nextui-org/theme/dist/**/*.{js,ts,jsx,tsx}' // pnpm 二级依赖被隐藏, 需要到根目录去下载
+    './node_modules/@nextui-org/theme/dist/**/*.{js,ts,jsx,tsx}' // pnpm 二级依赖被隐藏, 需要到根目录去下载
   ],
   theme: {
     extend: {}

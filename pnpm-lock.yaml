@@ -14,6 +14,9 @@ dependencies:
   framer-motion:
     specifier: ^11.0.8
     version: 11.0.8(react-dom@18.2.0)(react@18.2.0)
+  hook-form-react:
+    specifier: ^2.0.0
+    version: 2.0.0
   react:
     specifier: ^18.2.0
     version: 18.2.0
@@ -4155,6 +4158,10 @@ packages:
     engines: {node: '>= 0.4'}
     dependencies:
       function-bind: 1.1.2
+    dev: false
+
+  /hook-form-react@2.0.0:
+    resolution: {integrity: sha512-3EoiCIqAMPXjiDf9l847Uxt5qwjgSHkIzGRtiRXYJIz3cKzy2PS+9h1OteAvbZmsyL1PHHNJkhDXUHW3ZWhfrg==}
     dev: false
 
   /ignore@5.3.1:
