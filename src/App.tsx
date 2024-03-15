@@ -1,5 +1,5 @@
-// import { useAttr, useFormData, Verifications } from '../../src/index'
 import { useAttr, useFormData, useSubFormData, Verifications } from 'hook-form-react'
+import { Antd_5 } from 'hook-form-react/Antd_5'
 import {
   Button,
   Checkbox,
@@ -12,8 +12,18 @@ import {
   Switch,
   Textarea
 } from '@nextui-org/react'
-import { animals } from './data'
-// import { Button, Input } from 'antd'
+import { animals, treeData } from './data'
+import {
+  Input as A_Input,
+  InputNumber,
+  DatePicker,
+  TimePicker,
+  Select as A_Select,
+  Switch as A_Switch,
+  Checkbox as A_Checkbox,
+  Radio as A_Radio,
+  TreeSelect
+} from 'antd'
 
 export const Example = () => {
   const formData = useFormData(
@@ -31,6 +41,15 @@ export const Example = () => {
         name: '小红',
         heihei: '小红',
         haha: '小红'
+      },
+      antdValue: {
+        str: '',
+        num: 0,
+        arr: [] as string[],
+        arr2: [] as string[],
+        arr3: [] as string[],
+        arr4: [] as string[],
+        bool: false
       }
     },
     {
@@ -58,11 +77,13 @@ export const Example = () => {
   const attr = useAttr(formData)
 
   const submit = async () => {
-    // formData.pushValue('password', (old) => old + '你好')
-    const isValid = await formData.doAllValidate()
-    const isValidValue10 = await value10Form.doAllValidate()
-    console.log('submit:isValid: ', isValid, isValidValue10)
-    if (isValid) {
+    const valid = await formData.doAllValidateImme()
+    const validRes = await value10Form.doAllValidateImme()
+    const validAntd = await antdValueForm.doAllValidate()
+    console.log('formData', formData.value)
+    console.log('latestFormData', valid.data)
+    console.log('submit:isValid: ', valid.isValid, validRes.isValid)
+    if (valid.isValid && validRes.isValid && validAntd) {
       console.log('formValue', formData.value)
     }
   }
@@ -72,6 +93,13 @@ export const Example = () => {
   const value10Form = useSubFormData(formData.formData, 'value10', {
     haha: [Verifications.required(), Verifications.email()]
   })
+
+  const antdValueForm = useSubFormData(formData.formData, 'antdValue', {
+    num: [Verifications.min(1)],
+    arr: [Verifications.minLenth(1)],
+    str: [Verifications.required()]
+  })
+  const attrAntd = useAttr(antdValueForm)
 
   const attrValue10 = useAttr(value10Form)
 
@@ -98,6 +126,10 @@ export const Example = () => {
           className="mb-2"
           placeholder="请输入登录密码"
           {...attr('password', attr.NextUI.N_Input)}
+          onChange={(e) => {
+            formData.pushValue('password', e.target.value)
+            formData.doValidate('password')
+          }}
           // value={formData.value.password}
           // isInvalid={formData.errors.password?.isInvalid}
           // errorMessage={formData.errors.password?.msg}
@@ -192,6 +224,7 @@ export const Example = () => {
           <Button
             onClick={() => {
               value10Form.pushValue('haha', '163@163.com')
+              // submit()
             }}
           >
             setHaha
@@ -206,6 +239,58 @@ export const Example = () => {
             手动校验:haha
           </Button>
         </div>
+        <div className="border border-gray-200 mt-4 p-4 rounded-md">
+          <h1 className="text-lg font-bold">Antd:</h1>
+          <Antd_5.FormItem className="mt-2" {...attrAntd('str')}>
+            <A_Input className="pb-2" {...attrAntd('str', Antd_5.A_Input)} />
+          </Antd_5.FormItem>
+          <Antd_5.FormItem className="mt-2" {...attrAntd('num')}>
+            <InputNumber className="pb-2" {...attrAntd('num', Antd_5.A_InputNumber)} />
+          </Antd_5.FormItem>
+          <Antd_5.FormItem className="mt-2" {...attrAntd('str')}>
+            <TimePicker className="pb-2" {...attrAntd('str', Antd_5.F_A_TimePicker())} />
+          </Antd_5.FormItem>
+          <Antd_5.FormItem className="mt-2" {...attrAntd('str')}>
+            <DatePicker className="pb-2" {...attrAntd('str', Antd_5.F_A_DatePicker())} />
+          </Antd_5.FormItem>
+          <Antd_5.FormItem className="mt-2" {...attrAntd('arr')}>
+            <DatePicker className="pb-2" {...attrAntd('arr', Antd_5.F_A_DatePickerMult())} />
+          </Antd_5.FormItem>
+          <Antd_5.FormItem className="mt-2" {...attrAntd('arr2')}>
+            <DatePicker.RangePicker
+              className="pb-2"
+              {...attrAntd('arr2', Antd_5.F_A_DateRangePicker())}
+            />
+          </Antd_5.FormItem>
+          <Antd_5.FormItem className="mt-2" {...attrAntd('arr2')}>
+            <A_Select
+              className="pb-2"
+              options={animals.map((it) => {
+                return { ...it, title: it.label }
+              })}
+              mode="multiple"
+              {...attrAntd('arr3', Antd_5.A_Select)}
+            />
+          </Antd_5.FormItem>
+          <Antd_5.FormItem className="mt-2" {...attrAntd('str')}>
+            <A_Select
+              options={animals.map((it) => {
+                return { ...it, title: it.label }
+              })}
+              {...attrAntd('str', Antd_5.A_Select)}
+            />
+          </Antd_5.FormItem>
+          <A_Checkbox {...attrAntd('bool', Antd_5.A_Checkbox)} />
+          <A_Switch {...attrAntd('bool', Antd_5.A_Switch)} />
+          <A_Radio.Group {...attrAntd('str', Antd_5.A_RadioGroup)}>
+            {animals.map((it) => (
+              <A_Radio value={it.value}>{it.label}</A_Radio>
+            ))}
+          </A_Radio.Group>
+          <Antd_5.FormItem className="mt-2" {...attrAntd('str')}>
+            <TreeSelect treeData={treeData} {...attrAntd('str', Antd_5.A_TreeSelect)}></TreeSelect>
+          </Antd_5.FormItem>
+        </div>
 
         <div className="mt-2">
           <Button color="primary" onClick={submit}>
@@ -218,6 +303,7 @@ export const Example = () => {
             onClick={() => {
               formData.reset()
               value10Form.formErrors.reset()
+              antdValueForm.formErrors.reset()
             }}
           >
             重置
